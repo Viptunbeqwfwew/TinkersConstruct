@@ -91,11 +91,12 @@ public class ModAttack extends ItemModTypeFilter {
 
         if (tags.hasKey(key)) {
             int[] keyPair = tags.getIntArray(key);
+            int overThreshold = increase / threshold;
 
             int leftToBoost = threshold - (keyPair[0] % threshold);
             if (increase >= leftToBoost) {
                 int attack = tags.getInteger("Attack");
-                attack += 1 + (increase - leftToBoost) / threshold;
+                attack += (overThreshold > 1) ? overThreshold : 1;
                 tags.setInteger("Attack", attack);
             }
 
@@ -117,13 +118,14 @@ public class ModAttack extends ItemModTypeFilter {
             int modifiers = tags.getInteger("Modifiers");
             modifiers -= 1;
             tags.setInteger("Modifiers", modifiers);
+            int overThreshold = increase / threshold;
             String modName = "\u00a7f" + guiType + " (" + increase + "/" + max + ")";
             int tooltipIndex = addToolTip(tool, tooltipName, modName);
             int[] keyPair = new int[] { increase, max, tooltipIndex };
             tags.setIntArray(key, keyPair);
 
             int attack = tags.getInteger("Attack");
-            attack += 1 + increase / threshold;
+            attack += (overThreshold >= 1) ? overThreshold : 0;
             tags.setInteger("Attack", attack);
         }
     }
